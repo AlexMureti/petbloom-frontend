@@ -35,139 +35,146 @@ export function AuthProvider({ children }) {
       return
     }
 
-    // Login to backend with Firebase token
-    const response = await api.post('/auth/login', { token: idToken })
-    setCurrentUser(response.data)
-  } catch (error) {
-    console.error('Auth error:', error)
-    setCurrentUser(null)
-    setToken(null)
-  }
-} else {
-  setCurrentUser(null)
-  setToken(null)
-}
-setLoading(false)
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const idToken = await user.getIdToken()
+          setToken(idToken)
+
+          // Login to backend with Firebase token
+          const response = await api.post('/auth/login', { token: idToken })
+          setCurrentUser(response.data)
+        } catch (error) {
+          console.error('Auth error:', error)
+          setCurrentUser(null)
+          setToken(null)
+        }
+      } else {
+        setCurrentUser(null)
+        setToken(null)
+      }
+      setLoading(false)
     })
 
-return unsubscribe
+    return unsubscribe
   }, [])
 
-const login = async (email, password) => {
-  try {
-    if (!isFirebaseAvailable()) {
-      toast.error('Firebase is not configured. Please try again later.')
-      throw new Error('Firebase not available')
+  const login = async (email, password) => {
+    try {
+      if (!isFirebaseAvailable()) {
+        toast.error('Firebase is not configured. Please try again later.')
+        throw new Error('Firebase not available')
+      }
+
+      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      const idToken = await userCredential.user.getIdToken()
+
+      const response = await api.post('/auth/login', { token: idToken })
+      setCurrentUser(response.data)
+      setToken(response.data.access_token)
+
+      // Set authorization header
+      api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`
+
+      toast.success('Login successful!')
+      return response.data
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Login failed')
+      throw error
     }
-
-    const userCredential = await signInWithEmailAndPassword(auth, email, password)
-    const idToken = await userCredential.user.getIdToken()
-
-    const response = await api.post('/auth/login', { token: idToken })
-    setCurrentUser(response.data)
-    setToken(response.data.access_token)
-
-    // Set authorization header
-    api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`
-
-    toast.success('Login successful!')
-    return response.data
-  } catch (error) {
-    toast.error(error.response?.data?.detail || 'Login failed')
-    throw error
-  } if (!isFirebaseAvailable()) {
-    toast.error('Firebase is not configured. Please try again later.')
-    throw new Error('Firebase not available')
   }
 
+  const register = async (email, password, fullName, phone) => {
+    try {
+      if (!isFirebaseAvailable()) {
+        toast.error('Firebase is not configured. Please try again later.')
+        throw new Error('Firebase not available')
+      }
 
-}
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+      const idToken = await userCredential.user.getIdToken()
 
-const register = async (email, password, fullName, phone) => {
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-    const idToken = await userCredential.user.getIdToken()
+      // Update user profile
+      await userCredential.user.updateProfile({
+        displayName: fullName
+      })
 
-    // Update user profile
-    await userCredential.user.updateProfile({
-      displayName: fullName
-    })
+      const response = await api.post('/auth/login', { token: idToken })
+      setCurrentUser(response.data)
+      setToken(response.data.access_token)
 
-    const response = await api.post('/auth/login', { token: idToken })
-    setCurrentUser(response.data)
-    setToken(response.data.access_token)
+      // Set authorization header
+      api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`
 
-    // Set authorization header
-    api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`
-
-    if (!isFirebaseAvailable()) {
-      toast.error('Firebase is not configured. Please try again later.')
-      throw new Error('Firebase not available')
+      toast.success('Registration successful!')
+      return response.data
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Registration failed')
+      throw error
     }
-
-    toast.success('Registration successful!')
-    return response.data
-  } catch (error) {
-    toast.error(error.response?.data?.detail || 'Registration failed')
-    throw error
   }
-}
 
-const loginWithGoogle = async () => {
-  try {
-    const provider = new GoogleAuthProvider()
-    const userCredential = await signInWithPopup(auth, provider)
-    const idToken = await userCredential.user.getIdToken()
+  const loginWithGoogle = async () => {
+    try {
+      if (!isFirebaseAvailable()) {
+        toast.error('Firebase is not configured. Please try again later.')
+        throw new Error('Firebase not available')
+      }
 
-    const response = await api.post('/auth/login', { token: idToken })
-    setCurrentUser(response.data)
-    if (!isFirebaseAvailable()) {
+      const provider = new GoogleAuthProvider()
+      const userCredential = await signInWithPopup(auth, provider)
+      const idToken = await userCredential.user.getIdToken()
+
+      const response = await api.post('/auth/login', { token: idToken })
+      setCurrentUser(response.data)
+      setToken(response.data.access_token)
+
+      // Set authorization header
+      api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`
+
+      toast.success('Google login successful!')
+      return response.data
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Google login failed')
+      throw error
+    }
+  }
+
+  const logout = async () => {
+    try {
+      if (!isFirebaseAvailable()) {
+        setCurrentUser(null)
+        setToken(null)
+        delete api.defaults.headers.common['Authorization']
+        toast.success('Logged out successfully!')
+        return
+      }
+
+      await signOut(auth)
       setCurrentUser(null)
       setToken(null)
       delete api.defaults.headers.common['Authorization']
       toast.success('Logged out successfully!')
-      return
+    } catch (error) {
+      toast.error('Logout failed')
+      throw error
     }
-
-    setToken(response.data.access_token)
-
-    // Set authorization header
-    api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`
-
-    toast.success('Google login successful!')
-    return response.data
-  } catch (error) {
-    toast.error(error.response?.data?.detail || 'Google login failed')
-    throw error
   }
-}
 
-const logout = async () => {
-  try {
-    await signOut(auth)
-    setCurrentUser(null)
-    setToken(null)
-    delete api.defaults.headers.common['Authorization']
-    toast.success('Logged out successfully!')
-  } catch (error) {
-    toast.error('Logout failed')
-    throw error
+  const value = {
+    currentUser,
+    token,
+    login,
+    register,
+    loginWithGoogle,
+    logout,
+    loading
   }
-}
 
-const value = {
-  currentUser,
-  token,
-  login,
-  register,
-  loginWithGoogle,
-  logout,
-  loading
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  )
 }
-
-return (
-  <AuthContext.Provider value={value}>
-    {!loading && children}
-  </AuthContext.Provider>
-)
 }
