@@ -96,10 +96,10 @@ function App() {
                 }}
               />
             </div>
+          </Router>
         </AuthProvider>
       </QueryClientProvider>
-    </ErrorBoundary
-    </QueryClientProvider >
+    </ErrorBoundary>
   )
 }
 
