@@ -4,6 +4,7 @@ publish = "dist"
 
 [build.environment]
 NODE_VERSION = "18"
+VITE_API_URL = "https://your-backend-api.com/api/v1"
 
 [[redirects]]
 from = "/*"
