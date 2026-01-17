@@ -41,7 +41,7 @@ function Pets() {
       })
       
       const response = await api.get(`/pets?${params}`)
-      return response.data
+      return response.data.data || response.data
     }
   })
 
@@ -298,7 +298,7 @@ function Pets() {
                         </p>
                         <p className="text-sm text-gray-600 mb-2 capitalize">{pet.size} • {pet.gender}</p>
                         <div className="flex items-center justify-between">
-                          <p className="text-xl font-bold text-primary-500">${pet.adoptionFee}</p>
+                          <p className="text-xl font-bold text-primary-500">${pet.price}</p>
                           <Link
                             to={`/pets/${pet.id}`}
                             className="bg-primary-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-primary-600 transition-colors"
