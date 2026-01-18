@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     JWT_SECRET: str = "test-secret-key-change-in-production"
     JWT_ALGORITHM: str = "HS256"
     API_URL: str = "http://localhost:8000"
-    FRONTEND_URL: str = "http://localhost:5173"
+    FRONTEND_URL: str = "https://pet-bloom.vercel.app"
     ENVIRONMENT: str = "development"
 
     class Config:

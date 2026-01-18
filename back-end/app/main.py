@@ -19,6 +19,8 @@ app = FastAPI(title="PetBloom API", version="1.0.0")
 cors_origins = [settings.FRONTEND_URL]
 if settings.ENVIRONMENT == "development":
     cors_origins.extend(["http://localhost:5173", "http://localhost:3000"])
+# Also add Vercel preview URLs for testing
+cors_origins.extend(["https://pet-bloom.vercel.app"])
 
 app.add_middleware(
     CORSMiddleware,
