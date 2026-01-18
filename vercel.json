@@ -1,6 +1,6 @@
 {
     "env": {
-        "VITE_API_URL": "@vite_api_url"
+        "VITE_API_URL": "https://petbloom-frontend-production.up.railway.app/api/v1"
     },
     "buildCommand": "npm run build",
     "outputDirectory": "dist",
