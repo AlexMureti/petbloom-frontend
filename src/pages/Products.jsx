@@ -26,7 +26,6 @@ function Products() {
   // Filters state
   const [filters, setFilters] = useState({
     category: searchParams.get('category') || '',
-    brand: searchParams.get('brand') || '',
     petType: searchParams.get('petType') || '',
     minPrice: searchParams.get('minPrice') || '',
     maxPrice: searchParams.get('maxPrice') || ''
@@ -332,8 +331,8 @@ function Products() {
                         key={i + 1}
                         onClick={() => setCurrentPage(i + 1)}
                         className={`px-3 py-2 rounded-md text-sm font-medium ${currentPage === i + 1
-                            ? 'bg-primary-500 text-white'
-                            : 'border border-gray-300 hover:bg-gray-50'
+                          ? 'bg-primary-500 text-white'
+                          : 'border border-gray-300 hover:bg-gray-50'
                           }`}
                       >
                         {i + 1}
