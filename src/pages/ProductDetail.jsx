@@ -124,7 +124,7 @@ function ProductDetail() {
 
               <div className="mb-6">
                 <p className="text-3xl font-bold text-primary-500 mb-4">${product?.price}</p>
-                
+
                 <div className="flex items-center mb-4">
                   <span className="text-sm text-gray-600 mr-4">
                     {product?.stock > 0 ? `${product?.stock} in stock` : 'Out of stock'}
@@ -171,7 +171,7 @@ function ProductDetail() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">For Pets</span>
-                  <span className="font-medium">{product?.petType?.join(', ')}</span>
+                  <span className="font-medium">{product?.petType}</span>
                 </div>
               </div>
             </div>
