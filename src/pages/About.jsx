@@ -118,7 +118,7 @@ function About() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="bg-primary-100 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4">
                 <User className="h-16 w-16 text-primary-500" />
@@ -146,8 +146,42 @@ function About() {
                 <User className="h-16 w-16 text-accent-500" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">Sharon Soyian</h3>
-              <p className="text-accent-500 font-medium mb-2">Customer Experience Lead</p>\n              <p className="text-gray-600">
+              <p className="text-accent-500 font-medium mb-2">Customer Experience Lead</p>
+              <p className="text-gray-600">
                 Committed to making every pet adoption journey smooth and joyful
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-primary-100 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4">
+                <User className="h-16 w-16 text-primary-500" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">David Kamau</h3>
+              <p className="text-primary-500 font-medium mb-2">Technology Lead</p>
+              <p className="text-gray-600">
+                Building innovative solutions to make pet adoption seamless and secure
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-secondary-100 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4">
+                <User className="h-16 w-16 text-secondary-500" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Vanessa Omondi</h3>
+              <p className="text-secondary-500 font-medium mb-2">Marketing & Partnerships</p>
+              <p className="text-gray-600">
+                Growing our community and connecting pet lovers with quality products and services
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-accent-100 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4">
+                <User className="h-16 w-16 text-accent-500" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Ian Nasoore</h3>
+              <p className="text-accent-500 font-medium mb-2">Breeder Relations Manager</p>
+              <p className="text-gray-600">
+                Ensuring our network of breeders meets the highest standards of ethical care
               </p>
             </div>
           </div>
