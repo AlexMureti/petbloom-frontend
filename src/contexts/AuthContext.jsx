@@ -99,9 +99,17 @@ export function AuthProvider({ children }) {
         displayName: fullName
       })
 
-      const response = await api.post('/auth/login', { token: idToken })
-      setCurrentUser(response.data)
-      setToken(response.data.access_token)
+      // Call backend register endpoint with Firebase credentials
+      const response = await api.post('/users/register', {
+        email: email,
+        name: fullName,
+        firebaseUid: userCredential.user.uid
+      })
+
+      // Get auth token from backend
+      const authResponse = await api.post('/auth/login', { token: idToken })
+      setCurrentUser(authResponse.data)
+      setToken(authResponse.data.access_token)
 
       // Set authorization header
       api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`
