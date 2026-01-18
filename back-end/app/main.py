@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.config import get_settings
-from app.routes import users, pets, products, cart, wishlist, orders, uploads
+from app.routes import users, pets, products, cart, wishlist, orders, uploads, seed
 from app.services.prisma_client import prisma_client
 import os
 import logging
@@ -43,6 +43,7 @@ app.include_router(cart.router, prefix="/api/v1")
 app.include_router(wishlist.router, prefix="/api/v1")
 app.include_router(orders.router, prefix="/api/v1")
 app.include_router(uploads.router, prefix="/api/v1")
+app.include_router(seed.router, prefix="/api/v1")
 
 if os.path.exists("uploads"):
     app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
