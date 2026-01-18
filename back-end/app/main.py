@@ -5,15 +5,24 @@ from app.config import get_settings
 from app.routes import users, pets, products, cart, wishlist, orders, uploads
 from app.services.prisma_client import prisma_client
 import os
+import logging
 
 settings = get_settings()
 
-app = FastAPI()
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-# CORS
+app = FastAPI(title="PetBloom API", version="1.0.0")
+
+# CORS - adjust for production
+cors_origins = [settings.FRONTEND_URL]
+if settings.ENVIRONMENT == "development":
+    cors_origins.extend(["http://localhost:5173", "http://localhost:3000"])
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.FRONTEND_URL, "http://localhost:5173", "http://localhost:3000"],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
