@@ -32,11 +32,18 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup():
-    await prisma_client.connect()
+    try:
+        await prisma_client.connect()
+        logger.info("✅ Prisma connected")
+    except Exception as e:
+        logger.warning(f"⚠️ Prisma connection failed: {e}. Using direct SQL mode.")
 
 @app.on_event("shutdown")
 async def shutdown():
-    await prisma_client.disconnect()
+    try:
+        await prisma_client.disconnect()
+    except:
+        pass
 
 app.include_router(users.router, prefix="/api/v1")
 app.include_router(auth.router, prefix="/api/v1")
